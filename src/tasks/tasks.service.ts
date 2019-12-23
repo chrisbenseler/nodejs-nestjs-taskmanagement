@@ -5,6 +5,7 @@ import { TaskRepository } from './task.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './task.entity';
 import { CreateTaskDTO } from './create-task.dto';
+import { UpdateTaskDTO } from './update-task.dto';
 
 @Injectable()
 export class TasksService {
@@ -28,19 +29,7 @@ export class TasksService {
         return tasks;
     }
 
-    update(id: string, updateTaskDTO: UpdateTaskDTO) {
-        const { title, description, status } = updateTaskDTO;
-        //const taskId = this.tasks.find( task => task.id === id ).id;
-        const taskId = this.get(id).id;
-        const newTask: Task = {
-            id: taskId,
-            title,
-            description,
-            status
-        }
-        this.tasks = this.tasks.map(task => task.id === taskId ? newTask : task);
-        return true;
-    }
+    
 
     
     */
@@ -65,6 +54,20 @@ export class TasksService {
         }
         this.taskRepository.delete(found.id);
         
+    }
+
+    async update(id: number, updateTaskDTO: UpdateTaskDTO) {
+        const { title, description, status } = updateTaskDTO;
+        //const taskId = this.tasks.find( task => task.id === id ).id;
+        const task = await this.get(id);
+        
+        this.taskRepository.update(id, {
+            title,
+            description,
+            status
+        })
+       
+        return true;
     }
 
 }

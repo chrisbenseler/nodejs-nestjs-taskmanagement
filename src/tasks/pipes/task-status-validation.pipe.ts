@@ -5,7 +5,7 @@ export class TaskStatusValidationPipe implements PipeTransform {
     transform(value: any) {
         const status = value.status;
         if(TasksStatus[status]) {
-            return true;
+            return value;
         }
         throw new BadRequestException('Status invalid');
     }
