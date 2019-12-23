@@ -15,27 +15,19 @@ export class TasksService {
         private taskRepository: TaskRepository
     ) {}
 
-    /*
-    private tasks: Task[] = [];
+    async getTasks(filter): Promise<Task[]> {
 
-    getTasks(filter): Task[] {
-
-        const tasks =  this.tasks;
-
+        const query = this.taskRepository.createQueryBuilder('task');
+        
         if(filter.status) {
-            return tasks.filter( task => task.status == filter.status)
+            query.andWhere('task.status = :status', { status: filter.status })
         }
+        const tasks = query.getMany();
 
         return tasks;
     }
 
-    
-
-    
-    */
-
    async create(createTaskDTO: CreateTaskDTO) {
-        
         return this.taskRepository.createTask(createTaskDTO);
     }
 
