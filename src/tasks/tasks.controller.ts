@@ -15,36 +15,44 @@ export class TasksController {
 
     @Get('/:id')
     get(
-        @Param('id', ParseIntPipe) id: number
+        @Param('id', ParseIntPipe) id: number,
+        @GetUser() user: User
     ): Promise<Task> {
-        return this.tasksService.get(id);
+        return this.tasksService.get(id, user);
     }
 
     @Post()
     @UsePipes(ValidationPipe)
     create(
         @Body() createTaskDTO: CreateTaskDTO,
-        @GetUser() user: User    
+        @GetUser() user: User
     ): Promise<Task> {
         return this.tasksService.create(createTaskDTO, user);
     }
 
     @Delete('/:id')
-    delete(@Param('id') id: number) {
-        return this.tasksService.delete(id);
+    delete(
+        @Param('id') id: number,
+        @GetUser() user: User
+    ) {
+        return this.tasksService.delete(id, user);
     }
 
     @Put('/:id')
     update(
         @Param('id') id: number,
-        @Body('task', TaskStatusValidationPipe) task: UpdateTaskDTO) {
+        @GetUser() user: User,
+        @Body('task', TaskStatusValidationPipe,) task: UpdateTaskDTO) {
             console.log({ task })
-        return this.tasksService.update(id, task)
+        return this.tasksService.update(id, task, user)
     }
     
     @Get()
-    getTasks(@Query() filter): Promise<Task[]> {
-        return this.tasksService.getTasks(filter);
+    getTasks(
+        @Query() filter,
+        @GetUser() user: User
+    ): Promise<Task[]> {
+        return this.tasksService.getTasks(filter, user);
     }
     
 }
